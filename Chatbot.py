@@ -20,11 +20,10 @@ VECTOR_DB = []  # Store tuples of (paragraph, embedding)
 def add_paragraph_to_database(paragraph):
     """Generates an embedding for the paragraph and adds it to the vector database."""
     response = ollama.embed(model=EMBEDDING_MODEL, input=paragraph)
-    embedding = response['embeddings'][0]  # Extract the first embedding
+    embedding = response['embeddings'][0]  
     VECTOR_DB.append((paragraph, embedding))
 
 
-# Step 3: Cosine Similarity Function
 def cosine_similarity(a, b):
     """Calculates cosine similarity between two vectors."""
     dot_product = sum(x * y for x, y in zip(a, b))
@@ -33,7 +32,6 @@ def cosine_similarity(a, b):
     return dot_product / (norm_a * norm_b) if norm_a and norm_b else 0.0
 
 
-# Step 4: Retrieve Relevant Paragraphs
 def retrieve(query, top_n=3):
     """Retrieves the top N most relevant paragraphs based on cosine similarity."""
     response = ollama.embed(model=EMBEDDING_MODEL, input=query)
@@ -58,9 +56,6 @@ def chatbot_interaction():
         
         retrieved_knowledge = retrieve(input_query)
 
-        print('\nRetrieved knowledge:')
-        for chunk, similarity in retrieved_knowledge:
-            print(f' - (similarity: {similarity:.2f}) {chunk}')
 
         instruction_prompt = (
             f"You are a helpful chatbot.\n"
@@ -86,7 +81,7 @@ def chatbot_interaction():
 # Step 6: Main Functionality
 def main():
     """Main function to load dataset, process paragraphs, and interact with the chatbot."""
-    file_path = 'Paternity Leave Policy.txt'  # Path to the text file
+    file_path = 'Sick Leave Policy.txt'  # Path to the text file
     dataset = load_dataset(file_path)
 
     # Add paragraphs to the vector database
